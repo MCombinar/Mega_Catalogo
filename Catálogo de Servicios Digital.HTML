@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MEGA - Catálogo de Servicios Digital</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mega: {
+                blue: '#0055A4',
+                lightblue: '#00A1E0',
+                green: '#8DC63F',
+                red: '#ED1C24',
+                dark: '#231F20',
+              },
+            },
+             fontFamily: {
+              sans: ['Helvetica', 'Arial', 'sans-serif'],
+            }
+          },
+        },
+      };
+    </script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel for JSX Transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      /* Simple smooth scroll */
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+</head>
+  <body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+    
+// COMPONENTS DEFINITION
+
+const MegaLogo = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 200 50"
+    {...props}
+    fill="white"
+  >
+    <text x="50" y="35" fontFamily="Arial, sans-serif" fontSize="30" fontWeight="bold">
+      MEGA
+    </text>
+    <path d="M25,10 C40,10 40,40 25,40 Q10,25 25,10 M20,15 C30,15 30,35 20,35 M15,20 C25,20 25,30 15,30" stroke="white" strokeWidth="3" fill="none" />
+  </svg>
+);
+
+
+const Hero = () => {
+  return (
+    <section className="bg-mega-blue text-white py-16 sm:py-20 md:py-24">
+      <div className="container mx-auto px-4 text-center">
+        <div className="max-w-xs mx-auto mb-6">
+          <MegaLogo className="w-full h-auto" />
+        </div>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+          La conexión que mereces está con MEGA
+        </h1>
+        <p className="mt-4 text-lg sm:text-xl text-gray-200 max-w-2xl mx-auto">
+          Descubre por qué somos tu mejor opción en internet, televisión y telefonía.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+
+const BenefitCard = ({ icon, title, description }) => (
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 text-center">
+    <div className="text-mega-blue text-5xl mb-4 flex justify-center">
+      <i className={icon}></i>
+    </div>
+    <h3 className="text-xl font-bold mb-2 text-mega-dark">{title}</h3>
+    <p className="text-gray-600">{description}</p>
+  </div>
+);
+
+const Benefits = () => {
+  const benefits = [
+    {
+      icon: 'fa-solid fa-gauge-high',
+      title: 'Internet Simétrico',
+      description: '¡Sube y baja archivos a la misma velocidad! Ideal para home office, clases en línea y gaming.',
+    },
+    {
+      icon: 'fa-solid fa-tv',
+      title: 'Xview+ Interactivo',
+      description: 'Pausa, regresa, reinicia y graba tus programas favoritos. Más de 30,000 horas de contenido.',
+    },
+    {
+      icon: 'fa-solid fa-layer-group',
+      title: 'Apps Incluidas',
+      description: 'Disfruta de Netflix, Amazon Prime y más, directamente en tu paquete. Todo el entretenimiento en un solo lugar.',
+    },
+  ];
+
+  return (
+    <section id="benefits" className="py-16 sm:py-20 bg-gray-100">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-12 text-mega-dark">
+          ¿Por qué elegir <span className="text-mega-blue">MEGA?</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {benefits.map((benefit, index) => (
+            <BenefitCard key={index} {...benefit} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+const AppLogo = ({ appName }) => {
+  const logos = {
+    'NETFLIX': 'https://img.icons8.com/color/48/netflix.png',
+    'amazon prime': 'https://img.icons8.com/color/48/amazon-prime-video.png',
+    'Wifi Ultra': 'https://img.icons8.com/fluency/48/wifi.png',
+  };
+  return <img src={logos[appName]} alt={`${appName} logo`} className="w-8 h-8"/>;
+};
+
+const PlanCard = ({ speed, price, features, apps, highlight }) => {
+    const whatsappMessage = encodeURIComponent(`Hola Marco, me interesa el paquete de ${speed} Megas. ¿Me puedes dar más información?`);
+    return (
+        <div className={`bg-white rounded-2xl shadow-lg border-2 transition-transform duration-300 hover:-translate-y-2 ${highlight ? 'border-mega-blue scale-105' : 'border-transparent'}`}>
+            <div className={`p-6 rounded-t-xl ${highlight ? 'bg-mega-blue text-white' : 'bg-gray-200'}`}>
+                <h3 className="text-2xl font-bold text-center">
+                    <span className="text-5xl">{speed}</span> MEGAS
+                </h3>
+                <p className="text-center font-semibold">{highlight ? 'Paquete Recomendado' : 'TV INTERACTIVA'}</p>
+            </div>
+            <div className="p-6">
+                <div className="text-center my-4">
+                    <span className="text-5xl font-extrabold text-mega-dark">${price}</span>
+                    <span className="text-gray-500">/ al mes x 6 meses*</span>
+                </div>
+                <ul className="space-y-3 my-6 text-gray-700">
+                    {features.map((feature, index) => (
+                        <li key={index} className="flex items-center">
+                            <i className="fas fa-check-circle text-mega-green mr-3"></i>
+                            {feature}
+                        </li>
+                    ))}
+                </ul>
+                <div className="flex justify-center items-center space-x-4 mt-4 py-3 bg-gray-50 rounded-lg">
+                    {apps.map((app, index) => (
+                         <div key={index} className="flex flex-col items-center">
+                            <AppLogo appName={app} />
+                            <span className="text-xs mt-1 text-gray-600">{app}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-b-2xl">
+                 <a href={`https://wa.me/5215522685235?text=${whatsappMessage}`}
+                   target="_blank"
+                   rel="noopener noreferrer" 
+                   className="block w-full text-center bg-mega-red hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
+                    ¡Lo Quiero!
+                </a>
+            </div>
+        </div>
+    );
+};
+
+const ResidentialPlans = () => {
+  const plans = [
+    { speed: 100, price: 530, features: ['Velocidad Simétrica', 'Más de 80 Canales HD', 'Telefonía Fija Ilimitada', '30,000 horas de Películas y Series'], apps: ['amazon prime', 'NETFLIX'] },
+    { speed: 200, price: 630, features: ['Velocidad Simétrica', 'Más de 80 Canales HD', 'Telefonía Fija Ilimitada', '30,000 horas de Películas y Series'], apps: ['amazon prime', 'NETFLIX', 'Wifi Ultra'], highlight: true },
+    { speed: 300, price: 730, features: ['Velocidad Simétrica', 'Más de 80 Canales HD', 'Telefonía Fija Ilimitada', '30,000 horas de Películas y Series'], apps: ['amazon prime', 'NETFLIX', 'Wifi Ultra'] },
+    { speed: 500, price: 830, features: ['Velocidad Simétrica', 'Más de 80 Canales HD', 'Telefonía Fija Ilimitada', '30,000 horas de Películas y Series'], apps: ['amazon prime', 'NETFLIX', 'Wifi Ultra'] },
+  ];
+
+  return (
+    <section id="plans" className="py-16 sm:py-20 bg-white">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-4 text-mega-dark">
+          Paquetes para tu Hogar
+        </h2>
+        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+          Elige la velocidad perfecta para ti y tu familia. Todos nuestros paquetes incluyen Internet de Fibra Óptica, TV Interactiva y Telefonía Fija.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {plans.map((plan, index) => (
+            <PlanCard key={index} {...plan} />
+          ))}
+        </div>
+         <p className="text-center text-xs text-gray-500 mt-8">*Aplican restricciones. Precios mostrados al domiciliar el pago. Netflix estándar con anuncios.</p>
+      </div>
+    </section>
+  );
+};
+
+
+const MobilePlanCard = ({ title, data, price, bgColor, textColor }) => {
+    const whatsappMessage = encodeURIComponent(`Hola Marco, me interesa el plan Mega Móvil ${title}.`);
+  return (
+    <div className={`rounded-2xl shadow-lg p-8 text-center ${bgColor} ${textColor} flex flex-col justify-between transform hover:scale-105 transition-transform duration-300`}>
+      <div>
+        <h3 className="text-2xl font-bold">{title}</h3>
+        <p className="text-6xl font-extrabold my-4">{data}</p>
+        <p className="font-semibold mb-4">DATOS PARA NAVEGAR</p>
+        <div className="mb-6">
+          <p className="font-bold text-lg">REDES SOCIALES ILIMITADAS</p>
+          <div className="flex justify-center space-x-2 text-2xl mt-2">
+            <i className="fab fa-whatsapp"></i>
+            <i className="fab fa-facebook"></i>
+            <i className="fab fa-instagram"></i>
+            <i className="fab fa-twitter"></i>
+            <i className="fab fa-telegram"></i>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="text-4xl font-extrabold mb-4">
+          <span className="text-2xl font-normal">Por sólo </span>${price}<span className="text-2xl font-normal">/mes</span>
+        </div>
+        <a href={`https://wa.me/5215522685235?text=${whatsappMessage}`}
+           target="_blank"
+           rel="noopener noreferrer"
+           className="block w-full bg-white text-mega-blue font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-300">
+          Contratar Plan
+        </a>
+      </div>
+    </div>
+  );
+};
+
+const MobilePlans = () => {
+  const plans = [
+    { title: 'Esencial', data: '6GB', price: 100, bgColor: 'bg-mega-blue', textColor: 'text-white' },
+    { title: 'Conectado', data: '30GB', price: 200, bgColor: 'bg-mega-green', textColor: 'text-white' },
+    { title: 'Ilimitado', data: 'ILIMITADOS', price: 300, bgColor: 'bg-mega-dark', textColor: 'text-white' },
+  ];
+
+  return (
+    <section id="mobile" className="py-16 sm:py-20 bg-gray-100">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-4 text-mega-dark">
+          Mega Móvil, siempre conectado
+        </h2>
+        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+          ¡Cámbiate, conserva tu número y no pagues más! Todos los planes incluyen llamadas y SMS ilimitados en México, EUA y Canadá.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {plans.map((plan, index) => (
+            <MobilePlanCard key={index} {...plan} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+const FullConnected = () => {
+  return (
+    <section id="full-connected" className="relative py-20 bg-mega-dark text-white bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1585076263254-297592a2a757?q=80&w=2070&auto=format&fit=crop')" }}>
+      <div className="absolute inset-0 bg-mega-dark opacity-80"></div>
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-mega-green uppercase tracking-widest">Full Connected Home</h2>
+          <p className="text-4xl sm:text-5xl md:text-6xl font-extrabold my-4">1000 MEGAS</p>
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+            La experiencia definitiva de conectividad con Fibra Óptica para los hogares más exigentes.
+          </p>
+        </div>
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
+            <div className="text-mega-green text-4xl mb-3"><i className="fas fa-wifi"></i></div>
+            <h3 className="font-bold text-lg">Extensor Mesh</h3>
+            <p className="text-sm text-gray-300">Cobertura total en cada rincón de tu casa.</p>
+          </div>
+          <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
+            <div className="text-mega-green text-4xl mb-3"><i className="fas fa-tv"></i></div>
+            <h3 className="font-bold text-lg">2 TVs con 120 Canales</h3>
+            <p className="text-sm text-gray-300">Entretenimiento para toda la familia.</p>
+          </div>
+          <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
+            <div className="text-mega-green text-4xl mb-3"><i className="fas fa-film"></i></div>
+            <h3 className="font-bold text-lg">Apps Incluidas</h3>
+            <p className="text-sm text-gray-300">Paramount+, HBO Max y Amazon Prime.</p>
+          </div>
+          <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
+            <div className="text-mega-green text-4xl mb-3"><i className="fas fa-phone-alt"></i></div>
+            <h3 className="font-bold text-lg">Telefonía Ilimitada</h3>
+            <p className="text-sm text-gray-300">Llamadas sin límite a donde quieras.</p>
+          </div>
+        </div>
+        <div className="text-center mt-12">
+          <p className="text-2xl text-gray-200">Todo por sólo</p>
+          <p className="text-6xl font-extrabold text-white my-2">$1,000 <span className="text-2xl font-normal">al mes*</span></p>
+          <a href="https://wa.me/5215522685235?text=Hola%20Marco,%20me%20interesa%20el%20paquete%20Full%20Connected%20Home%20de%201000%20Megas."
+             target="_blank"
+             rel="noopener noreferrer"
+             className="mt-4 inline-block bg-mega-green hover:bg-green-600 text-mega-dark font-bold py-4 px-8 rounded-lg transition-colors duration-300 text-lg">
+            ¡Quiero la máxima velocidad!
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+const BusinessSolutions = () => {
+    return (
+        <section id="business" className="py-16 sm:py-20 bg-white">
+            <div className="container mx-auto px-4">
+                <div className="text-center">
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-mega-dark">
+                        Soluciones para tu <span className="text-mega-blue">Negocio</span>
+                    </h2>
+                    <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Impulsa tu empresa con la conectividad y las herramientas que necesitas para crecer.
+                    </p>
+                </div>
+
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div className="border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow">
+                        <h3 className="text-2xl font-bold text-mega-blue mb-4">Cloud 1</h3>
+                        <ul className="space-y-3 text-gray-700">
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Dominio web (.com)</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Cuentas de correo ilimitadas</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Facturación electrónica (150 CFDI's)</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Protección virtual (1 equipo)</span></li>
+                        </ul>
+                    </div>
+                    <div className="border border-gray-200 rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow">
+                        <h3 className="text-2xl font-bold text-mega-blue mb-4">Cloud 2</h3>
+                        <ul className="space-y-3 text-gray-700">
+                           <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Dominio web (.com)</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Cuentas de correo ilimitadas</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Facturación electrónica ilimitada</span></li>
+                             <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Protección virtual (1 equipo)</span></li>
+                            <li className="flex items-start"><i className="fas fa-check-circle text-mega-green mt-1 mr-3"></i><span>Página web (básica)</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="text-center mt-12">
+                     <a href="https://wa.me/5215522685235?text=Hola%20Marco,%20quisiera%20información%20sobre%20los%20paquetes%20empresariales%20de%20MEGA."
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="inline-block bg-mega-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg">
+                        Cotizar para mi Negocio
+                    </a>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+
+const Check = () => <i className="fas fa-check text-mega-green text-xl"></i>;
+const Cross = () => <i className="fas fa-times text-red-500 text-xl"></i>;
+
+const Comparison = () => {
+  const features = [
+    { name: 'Internet Simétrico', mega: true, other: false },
+    { name: 'Velocidad Promocional', mega: '100 Mbps', other: '80 Mbps' },
+    { name: 'Canales de TV', mega: '80+', other: '78' },
+    { name: 'Apps Incluidas', mega: true, other: false },
+    { name: 'Telefonía Ilimitada (MX, EU, CAN)', mega: true, other: true },
+    { name: 'Instalación sin Costo', mega: true, other: false },
+  ];
+
+  return (
+    <section id="comparison" className="py-16 sm:py-20 bg-gray-100">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-12 text-mega-dark">
+          ¡Compara y <span className="text-mega-blue">convéncete!</span>
+        </h2>
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+          <table className="w-full text-center">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="p-4 font-bold text-left">Beneficio</th>
+                <th className="p-4 font-bold"><img src="https://logodownload.org/wp-content/uploads/2021/07/mega-logo.png" alt="MEGA Logo" className="h-6 mx-auto"/></th>
+                <th className="p-4 font-bold text-gray-600">Otra Compañía</th>
+              </tr>
+            </thead>
+            <tbody>
+              {features.map((feature, index) => (
+                <tr key={index} className="border-t border-gray-200">
+                  <td className="p-4 text-left font-semibold text-gray-700">{feature.name}</td>
+                  <td className="p-4 font-bold text-mega-dark">
+                    {typeof feature.mega === 'boolean' ? (feature.mega ? <Check /> : <Cross />) : feature.mega}
+                  </td>
+                  <td className="p-4 text-gray-600">
+                    {typeof feature.other === 'boolean' ? (feature.other ? <Check /> : <Cross />) : feature.other}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-center text-xs text-gray-500 mt-6 max-w-3xl mx-auto">
+          Comparativa basada en paquetes de 100 Mbps de internet residencial. La información de la competencia es de carácter público y puede variar.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+
+const Contact = () => {
+  return (
+    <section id="contact" className="py-20 bg-mega-blue text-white">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
+          ¿Listo para cambiarte a MEGA?
+        </h2>
+        <p className="text-lg text-gray-200 mb-8 max-w-xl mx-auto">
+          Soy tu promotor de servicios. Contáctame para resolver tus dudas y ayudarte con la contratación. ¡Es rápido y sencillo!
+        </p>
+        <div className="bg-white text-mega-dark rounded-xl shadow-2xl p-8 max-w-md mx-auto inline-block">
+          <h3 className="text-2xl font-bold">Marco Galvez</h3>
+          <p className="text-gray-600 mb-4">Promotor de Servicios MEGA</p>
+          <div className="flex items-center justify-center text-2xl font-semibold mb-6">
+            <i className="fas fa-phone-alt text-mega-green mr-3"></i>
+            <a href="tel:5522685235" className="hover:underline">55 2268 5235</a>
+          </div>
+          <a href="https://wa.me/5215522685235?text=Hola%20Marco,%20estoy%20listo%20para%20contratar%20MEGA.%20¿Me%20puedes%20ayudar?"
+             target="_blank"
+             rel="noopener noreferrer"
+             className="inline-flex items-center justify-center bg-mega-red hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg">
+            <i className="fab fa-whatsapp mr-3"></i>
+            ¡Contrata ahora por WhatsApp!
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const WhatsAppButton = ({ phoneNumber }) => {
+  const message = "Hola Marco, vi el catálogo digital y me gustaría más información sobre los servicios de MEGA.";
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+  return (
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300 z-50"
+      aria-label="Contactar por WhatsApp"
+    >
+      <i className="fab fa-whatsapp text-4xl"></i>
+    </a>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer className="bg-mega-dark text-gray-400 py-6">
+      <div className="container mx-auto px-4 text-center text-sm">
+        <p>&copy; {new Date().getFullYear()} MEGA. Todos los derechos reservados.</p>
+        <p className="mt-2">Este es un catálogo digital informativo. Las promociones y precios pueden estar sujetos a cambios y disponibilidad.</p>
+      </div>
+    </footer>
+  );
+};
+
+
+// MAIN APP COMPONENT
+
+const App = () => {
+  return (
+    <div className="bg-gray-50 min-h-screen font-sans text-mega-dark">
+      <main>
+        <Hero />
+        <Benefits />
+        <ResidentialPlans />
+        <MobilePlans />
+        <FullConnected />
+        <BusinessSolutions />
+        <Comparison />
+        <Contact />
+      </main>
+      <Footer />
+      <WhatsAppButton phoneNumber="5215522685235" />
+    </div>
+  );
+};
+
+
+// RENDER THE APP
+const rootElement = document.getElementById('root');
+const root = ReactDOM.createRoot(rootElement);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+    </script>
+  </body>
+</html>
